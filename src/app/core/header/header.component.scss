@@ -1,0 +1,128 @@
+@import 'src/styles/common.scss';
+
+$break-nav: 800px;
+
+:host() {
+    @extend .position-fixed, .w-100, .text-nowrap;
+    @extend .p-2;
+    top: 0;
+    z-index: 2000;
+    box-shadow: 0 0.1em 10px black;
+    background-color: white;
+
+    @include respond-to(sm) { 
+        padding: $sp-1;
+    }
+}
+
+nav {
+    @extend .d-flex, .align-items-center;
+    @include respond-to (sm) {
+        flex-wrap: wrap;
+    }
+}
+
+.brand {
+    @extend .align-self-start;
+    @extend .d-flex, .align-items-center;
+}
+
+.logo {
+    width: 3.6em;
+    height: 3.6em;
+
+    @include respond-to(md) {
+        padding: $sp-1; // p-1
+        width: 2.8em;
+        height: 2.8em;
+    }
+
+    @include respond-to(sm) {
+        padding: 0 !important;
+        width: 1.5em;
+        height: 1.5em;
+    }
+}
+
+.title {
+    margin-left: $sp-1;
+    color: #585858;
+    @include respond-to(lg) { 
+        margin-left: 0;
+        font-size: 1em; 
+    }
+
+    .main { // markaz
+        font-size: 1.2em;
+        font-weight: 600;
+
+        @include respond-to(lg) { font-size: 1em; }
+        @include respond-to(md) { font-size: 0.8em; }
+        @include respond-to(sm) { font-size: 0.7em; }
+    } 
+    .sub { // alumni asso
+        font-size: 0.9em;
+        @include respond-to(md) { font-size: 0.6em; }
+        @include respond-to(sm) { font-size: 0.6em; }
+    }
+}
+
+.button-container {
+
+    margin: -$sp-2;
+    display: flex;
+    align-self: stretch;
+    @include respond-to(sm) {
+        display: block !important;
+        overflow: hidden;
+        padding-top: $sp-3;
+        transition: max-height 1s;
+        max-height: 100em; // over the bounds 
+        flex-basis: 100%; // force wrap
+        order: 1; // so this gets wrapped
+        flex-grow: 1; // take full space after wrap
+
+        &.collapsed {
+            max-height: 0;
+        }
+    }
+}
+.button {
+    @extend .text-center, .text-uppercase, .align-self-stretch;
+    @extend .d-flex, .align-items-center; // vertical center
+    @extend .px-3;
+    
+    cursor: pointer;
+    @include respond-to(xl) { font-size: 1em; }
+    @include respond-to(lg) {
+        font-size: 0.7em;
+    }
+    @include respond-to(md) {
+        font-size: 0.8em;
+        padding: 0 $sp-2 0 $sp-2 !important; // .px-1
+    }
+    @include respond-to(sm) {
+        font-size: 0.8em;
+        padding: $sp-1 !important;
+    }
+
+    &.gold {
+        background-color: #FFAB40;
+        color: white;
+        &:hover { background-color: rgb(255, 191, 108); }
+    }
+
+    &:hover { background-color: #ECECEC; }
+    &:focus { background-color: rgb(243, 243, 243); }
+
+    .fa-user {
+        @extend .mr-2;
+        font-size: 1.5em;
+        color: #585858;
+    }
+}
+
+.collapse-toggler {
+    @extend .d-md-none;
+    @extend .navbar-toggler, .align-self-center;
+}

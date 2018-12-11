@@ -1,0 +1,17 @@
+@import '~bootstrap/scss/bootstrap.scss';
+
+/* padding & margin values */
+// Cant @extend inside media queries.
+// pt-1
+$sp-1: $spacer * 0.25;
+$sp-2: $spacer * 0.5;
+$sp-3: $spacer;
+$sp-4: $spacer * 1.5;
+$sp-5: $spacer * 3;
+
+/* Breakpoints */
+@mixin respond-to($media) {
+    @include media-breakpoint-down($media) {
+        @content;
+    }
+}

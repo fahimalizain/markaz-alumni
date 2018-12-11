@@ -1,0 +1,18 @@
+@import 'src/styles/common.scss';
+
+.container { /* Calculated using devtools computed values */
+    margin-top: 74px;
+    min-height: 480px;
+    @include respond-to(md) { margin-top: 62px; }
+    @include respond-to(sm) { margin-top: 44px; }
+}
+
+.background {
+    z-index: -10;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #EEEEEE;
+}

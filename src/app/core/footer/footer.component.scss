@@ -1,0 +1,34 @@
+@import '~bootstrap/scss/bootstrap.scss';
+
+:host() {
+    @extend .position-absolute, .p-2, .w-100;
+    bottom: 0;
+    color: white;
+    background-color: #393939;
+}
+
+a {
+    color: gainsboro;
+    &:hover {
+        color: white;
+    }
+}
+
+.footer-heading {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    .fa {
+        font-size: 1.4em;
+    }
+}
+
+.social .fa {
+    @extend .m-2;
+    font-size: 1.4em;
+    color: rgb(167, 167, 167);
+}
+
+.love {
+    color: #adadad;
+    font-size: 0.8em;
+}
