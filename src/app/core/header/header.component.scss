@@ -9,10 +9,6 @@ $break-nav: 800px;
     z-index: 2000;
     box-shadow: 0 0.1em 10px black;
     background-color: white;
-
-    @include respond-to(sm) { 
-        padding: $sp-1;
-    }
 }
 
 nav {
@@ -30,18 +26,6 @@ nav {
 .logo {
     width: 3.6em;
     height: 3.6em;
-
-    @include respond-to(md) {
-        padding: $sp-1; // p-1
-        width: 2.8em;
-        height: 2.8em;
-    }
-
-    @include respond-to(sm) {
-        padding: 0 !important;
-        width: 1.5em;
-        height: 1.5em;
-    }
 }
 
 .title {
@@ -57,13 +41,13 @@ nav {
         font-weight: 600;
 
         @include respond-to(lg) { font-size: 1em; }
-        @include respond-to(md) { font-size: 0.8em; }
-        @include respond-to(sm) { font-size: 0.7em; }
+        // @include respond-to(md) { font-size: 0.8em; }
+        // @include respond-to(sm) { font-size: 0.7em; }
     } 
-    .sub { // alumni asso
+    .sub { // alumni association
         font-size: 0.9em;
-        @include respond-to(md) { font-size: 0.6em; }
-        @include respond-to(sm) { font-size: 0.6em; }
+        @include respond-to(md) { font-size: 0.7em; }
+        // @include respond-to(sm) { font-size: 0.6em; }
     }
 }
 
@@ -103,7 +87,7 @@ nav {
     }
     @include respond-to(sm) {
         font-size: 0.8em;
-        padding: $sp-1 !important;
+        padding: $sp-1 $sp-2 !important;
     }
 
     &.gold {
