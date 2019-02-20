@@ -6,10 +6,11 @@ import { AuthService } from './auth/auth.service';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared/shared.module';
+import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 
 @NgModule({
-  declarations: [HeaderComponent, FooterComponent],
-  exports: [HeaderComponent, FooterComponent],
+  declarations: [HeaderComponent, FooterComponent, ComingSoonComponent],
+  exports: [HeaderComponent, FooterComponent, ComingSoonComponent],
   imports: [
     CommonModule,
     SharedModule
