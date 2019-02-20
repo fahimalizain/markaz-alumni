@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "surge-deploy": "ng build && npx surge dist/markaz-alumni https://markaz-alumni.surge.sh"
   },
   "private": true,
   "dependencies": {

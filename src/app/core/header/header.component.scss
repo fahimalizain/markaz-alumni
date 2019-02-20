@@ -9,6 +9,7 @@ $break-nav: 800px;
     z-index: 2000;
     box-shadow: 0 0.1em 10px black;
     background-color: white;
+    @include respond-to(xs) { padding: $sp-1 !important; }
 }
 
 nav {
@@ -21,11 +22,17 @@ nav {
 .brand {
     @extend .align-self-start;
     @extend .d-flex, .align-items-center;
+    cursor: pointer;
 }
 
 .logo {
     width: 3.6em;
     height: 3.6em;
+
+    @include respond-to(xs) {
+        width: 2.5em;
+        height: 2.5em;
+    }
 }
 
 .title {
@@ -41,8 +48,7 @@ nav {
         font-weight: 600;
 
         @include respond-to(lg) { font-size: 1em; }
-        // @include respond-to(md) { font-size: 0.8em; }
-        // @include respond-to(sm) { font-size: 0.7em; }
+        @include respond-to(xs) { font-size: 0.7em; }
     } 
     .sub { // alumni association
         font-size: 0.9em;
@@ -107,6 +113,6 @@ nav {
 }
 
 .collapse-toggler {
-    @extend .d-md-none;
+    @extend .d-md-none, .p-0, .mr-1;
     @extend .navbar-toggler, .align-self-center;
 }

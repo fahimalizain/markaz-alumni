@@ -1,5 +1,5 @@
 <nav>
-  <span class="brand">
+  <span class="brand" routerLink="/">
     <img class="logo p-2" src="assets/images/markaz-logo.png" />
     <div class="title">
       <h5 class="text-uppercase main m-0">Markazul Uloom English School</h5>
@@ -26,7 +26,7 @@
     <div class="button gold">
       Giving Back
     </div>
-    <div class="button">
+    <div class="button" [routerLink]="['/login']">
       <i class="fa fa-user"></i> Keep Connected
     </div>
   </div>

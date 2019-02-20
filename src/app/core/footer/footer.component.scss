@@ -2,7 +2,6 @@
 
 :host() {
     @extend .position-absolute, .p-2, .w-100;
-    bottom: 0;
     color: white;
     background-color: #393939;
 }
@@ -25,6 +24,7 @@ a {
 .social .fa {
     @extend .m-2;
     font-size: 1.4em;
+    // @include font-size-xx-large;
     color: rgb(167, 167, 167);
 }
 
