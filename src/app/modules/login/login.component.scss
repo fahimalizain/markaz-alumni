@@ -24,20 +24,6 @@
     }
 }
 
-.thridy-party-login-btn {
-    @extend .btn, .p-2;
-    width: 135px;
-
-    .icon {
-        width: 1.1em;
-        height: 1.1em;
-    }
-}
-.login-thrid-party-icon {
-    width: 1.1em;
-    height: 1.1em;
-}
-
 .secondary-actions {
     @extend .text-muted, .text-center, .mb-1;
     cursor: pointer;

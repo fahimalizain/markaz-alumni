@@ -6,7 +6,7 @@ $break-nav: 800px;
     @extend .position-fixed, .w-100, .text-nowrap;
     @extend .p-2;
     top: 0;
-    z-index: 2000;
+    z-index: 999;
     box-shadow: 0 0.1em 10px black;
     background-color: white;
     @include respond-to(xs) { padding: $sp-1 !important; }
