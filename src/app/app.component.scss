@@ -2,17 +2,16 @@
 
 .container {
     margin-top: 8vh;
-    min-height: 65vh;
+    min-height: 70vh;
     @include respond-to(sm) { margin-top: 6vh; }
     @include respond-to(xs) { margin-top: 5vh; }
 }
 
 .background {
     z-index: -10;
-    position: absolute;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
     top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background-color: #EEEEEE;
 }

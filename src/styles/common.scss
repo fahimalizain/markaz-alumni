@@ -18,10 +18,14 @@ $sp-5: $spacer * 3;
 
 .thridy-party-login-btn {
     @extend .btn, .p-2, .m-1;
-    width: 145px;
+    width: 180px;
 
     @include respond-to(sm) {
-        width: 180px;
+        width: 150px;
+    }
+
+    @include respond-to(xs) {
+        width: 130px;
     }
 
     .icon {

@@ -20,10 +20,10 @@ export class RegisterComponent implements OnInit {
     });
 
     this.detailsForm = this._fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      lastClass: ['10th', Validators.required],
-      graduationYear: [2019, Validators.required]
+      passOutYear: ['', Validators.required],
+      passOutClass: ['', Validators.required],
+      dateOfBirth: ['10th', Validators.required],
+      fullName: ['', Validators.required]
     });
   }
 
