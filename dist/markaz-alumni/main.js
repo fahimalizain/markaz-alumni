@@ -12,6 +12,10 @@ var map = {
 		"./src/app/modules/home/home.module.ts",
 		"modules-home-home-module"
 	],
+	"./modules/legal/legal.module": [
+		"./src/app/modules/legal/legal.module.ts",
+		"modules-legal-legal-module"
+	],
 	"./modules/login/login.module": [
 		"./src/app/modules/login/login.module.ts",
 		"modules-login-login-module"
@@ -64,6 +68,7 @@ var routes = [
     { path: 'home', redirectTo: '' },
     { path: 'login', loadChildren: './modules/login/login.module#LoginModule' },
     { path: 'register', loadChildren: './modules/register/register.module#RegisterModule' },
+    { path: 'legal', loadChildren: './modules/legal/legal.module#LegalModule' },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -473,7 +478,7 @@ var DummyDB = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col social\">\n      <a href=\"\"><i class=\"fa fa-facebook\"></i></a>\n      <a href=\"\"><i class=\"fa fa-twitter\"></i></a>\n    </div>\n  </div>\n  <div class=\"row mt-4 mb-4\">\n    <!--Search-->\n    <div class=\"col-sm-4 d-flex flex-column mb-2\">\n      <span class=\"footer-heading\"><i class=\"fa fa-bookmark-o mr-4\"></i>Search</span>\n      <hr class=\"w-100 mt-2 border-white\" />\n      <a href=\"\">By Directory</a>\n      <a href=\"\">By Current Location</a>\n      <a href=\"\">By Resources</a>\n    </div>\n\n    <!--Careers-->\n    <div class=\"col-sm-4 d-flex flex-column mb-2\">\n      <span class=\"footer-heading\"><i class=\"fa fa-bookmark-o mr-4\"></i>Careers</span>\n      <hr class=\"w-100 mt-2 border-white\" />\n      <a href=\"\">Jobs</a>\n      <a href=\"\">Internships</a>\n    </div>\n\n    <!--Contact-->\n    <div class=\"col-sm-4 d-flex flex-column mb-2\">\n      <span class=\"footer-heading\"><i class=\"fa fa-envelope-o mr-4\"></i>Contact</span>\n      <hr class=\"w-100 mt-2 border-white\" />\n      <a href=\"\">By Directory</a>\n      <a href=\"\">By Current Location</a>\n      <a href=\"\">By Resources</a>\n    </div>\n  </div>\n\n  <!--Made with love by the Alumni-->\n  <div class=\"row mt-2\">\n    <div class=\"col text-right text-lowercase love\">\n      Made with <i class=\"fa fa-heart\"></i> by Alumni\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col social\">\n      <a href=\"\"><i class=\"fa fa-facebook\"></i></a>\n      <a href=\"\"><i class=\"fa fa-twitter\"></i></a>\n    </div>\n  </div>\n  <div class=\"row mt-4 mb-4\">\n    <!--Search-->\n    <div class=\"col-sm-4 d-flex flex-column mb-2\">\n      <span class=\"footer-heading\"><i class=\"fa fa-bookmark-o mr-4\"></i>Search</span>\n      <hr class=\"w-100 mt-2 border-white\" />\n      <a href=\"\">By Directory</a>\n      <a href=\"\">By Current Location</a>\n      <a href=\"\">By Resources</a>\n    </div>\n\n    <!--Careers-->\n    <div class=\"col-sm-4 d-flex flex-column mb-2\">\n      <span class=\"footer-heading\"><i class=\"fa fa-bookmark-o mr-4\"></i>Careers</span>\n      <hr class=\"w-100 mt-2 border-white\" />\n      <a href=\"\">Jobs</a>\n      <a href=\"\">Internships</a>\n    </div>\n\n    <!--Contact-->\n    <div class=\"col-sm-4 d-flex flex-column mb-2\">\n      <span class=\"footer-heading\"><i class=\"fa fa-envelope-o mr-4\"></i>Contact</span>\n      <hr class=\"w-100 mt-2 border-white\" />\n      <a href=\"\">By Directory</a>\n      <a href=\"\">By Current Location</a>\n      <a href=\"\">By Resources</a>\n    </div>\n  </div>\n\n  <div class=\"row d-flex justify-content-center\">\n    <div class=\"d-flex justify-content-center\">\n      <a href=\"\" routerLink=\"legal/privacy-policy\" class=\"text-muted\">Privacy Policy</a>\n    </div>\n  </div>\n\n  <!--Made with love by the Alumni-->\n  <div class=\"row mt-2\">\n    <div class=\"col text-right text-lowercase love\">\n      Made with <i class=\"fa fa-heart\"></i> by Alumni\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
