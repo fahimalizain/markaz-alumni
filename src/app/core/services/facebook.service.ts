@@ -28,6 +28,7 @@ export default class FacebookService {
       const wnd = window as any;
       try {
         wnd.FB.login((r: FacebookLoginResponse) => {
+          console.log(r);
           if (r.status === 'connected') {
             // fetch data from our backend, check to see if something exists
             this.authService.oAuthLogin('facebook', r)
