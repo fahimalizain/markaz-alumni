@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import User from 'models/User';
 import { SpinnerService } from './spinner.service';
 import DummyDB from '../dummy.db';
+import { HttpClient } from '@angular/common/http';
+import { MBResponse, MBLoginResponse } from 'models/MBResponse';
 
 export type loginResponse = User | 'user_not_found' | 'wrong_credentials' | 'unknown_error';
 
@@ -11,11 +13,14 @@ export type loginResponse = User | 'user_not_found' | 'wrong_credentials' | 'unk
 export class AuthService {
 
   currentStatus: 'logged_in' | 'guest' = 'guest';
+  currentToken: string;
   currentUser: User = null;
 
   dummyDB = new DummyDB();
 
-  constructor(private spinnerService: SpinnerService) { }
+  constructor(
+    private spinnerService: SpinnerService,
+    private http: HttpClient) { }
 
   public login(email: string, password: string): Promise<loginResponse> {
     this.logout();
@@ -25,7 +30,7 @@ export class AuthService {
     .then((r) => {
       this.spinnerService.hideSpinner(spinnerId);
       if (User.isUser(r)) {
-        this.setUser(r);
+        this.setUser(r, '');
       }
       return r;
     });
@@ -35,13 +40,23 @@ export class AuthService {
    * Fetches the User data we have from the backend
    * @param userId id
    */
-  public oAuthLogin(provider: 'google' | 'facebook', data: any): Promise<loginResponse> {
-    return this.dummyDB.oAuthLogin(provider, data).then((r) => {
-      if (User.isUser(r)) {
-        this.setUser(r);
+  public oAuthLogin(provider: 'google' | 'facebook', provider_token: string): Promise<loginResponse> {
+    this.logout();
+    return this.http.post(
+      '/auth/login',
+      {
+        provider,
+        provider_token
       }
-      return r;
-    });
+    )
+    .toPromise()
+    .then((data: MBLoginResponse) => {
+      if (data.status === 'MB2_0000') {
+        // success
+        // set auth token
+      }
+      return 'unknown_error' as loginResponse;
+    }, () => 'unknown_error' as loginResponse);
   }
 
   /**
@@ -52,13 +67,23 @@ export class AuthService {
     return this.dummyDB.emailValid(email);
   }
 
-  public setUser(user: User) {
+  public setUser(user: User, auth_token: string) {
+    this.currentToken = auth_token;
     this.currentStatus = 'logged_in';
     this.currentUser = user;
   }
 
   public logout() {
+    this.currentToken = null;
     this.currentStatus = 'guest';
     this.currentUser = null;
+  }
+
+  public getToken() {
+    if (this.currentStatus === 'logged_in') {
+      return this.currentToken;
+    } else {
+      return null;
+    }
   }
 }

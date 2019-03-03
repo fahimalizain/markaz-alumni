@@ -28,19 +28,23 @@ export default class FacebookService {
       const wnd = window as any;
       try {
         wnd.FB.login((r: FacebookLoginResponse) => {
-          console.log(r);
-          if (r.status === 'connected') {
+          if (r.status !== 'connected') {
             // fetch data from our backend, check to see if something exists
-            this.authService.oAuthLogin('facebook', r)
-              .then((v) => {
-                this.spinnerService.hideSpinner(spinnerKey);
-                resolve(v);
-              })
-              .catch((e) => {
-                this.spinnerService.hideSpinner(spinnerKey);
-                resolve(e || 'unknown_error');
-              });
+            resolve('unknown_error');
+            console.error('Facebook Login Failed', r);
+            return;
           }
+
+          // proceed to server
+          this.authService.oAuthLogin('facebook', r.authResponse.accessToken)
+            .then((v) => {
+              this.spinnerService.hideSpinner(spinnerKey);
+              resolve(v);
+            })
+            .catch((e) => {
+              this.spinnerService.hideSpinner(spinnerKey);
+              resolve(e || 'unknown_error');
+            });
         },
           {
             scope: 'public_profile email',

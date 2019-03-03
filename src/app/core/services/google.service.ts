@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService, loginResponse } from './auth.service';
 import { SpinnerService } from './spinner.service';
+import { GoogleLoginResponse } from 'models/third.party.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,9 @@ export default class GoogleService {
         // Request scopes in addition to 'profile' and 'email'
         // scope: 'additional_scope'
       })
-      .then((gAuth) => {
-        this.gAuth = gAuth;
-        console.log(gAuth);
-      }, (e) => console.log('Google Auth Init Error', e));
+        .then((gAuth) => {
+          this.gAuth = gAuth;
+        }, (e) => console.log('Google Auth Init Error', e));
     });
   }
 
@@ -35,20 +35,16 @@ export default class GoogleService {
     this.spinnerService.showSpinner(spinnerId);
     return new Promise((res, rej) => {
       try {
-        this.gAuth.signIn({ scope: 'profile email'})
-        .then((gUser) => {
-          // https://developers.google.com/identity/sign-in/web/reference#googleusergetbasicprofile
-          const bProfile = gUser.getBasicProfile();
-
-          console.log(gUser, bProfile.getName());
-          this.spinnerService.hideSpinner(spinnerId);
-          res(gUser.getBasicProfile());
-        })
-        .catch((e) => {
-          res('unknown_error');
-          console.warn('Google Login', e);
-        })
-        .then(() => this.spinnerService.hideSpinner(spinnerId));
+        this.gAuth.signIn({ scope: 'profile email' })
+          .then((gResponse: GoogleLoginResponse) => {
+            // google sign in done, forward to backend
+            return this.authService.oAuthLogin('google', gResponse.getAuthResponse().id_token);
+          })
+          .catch((e) => {
+            res('unknown_error');
+            console.warn('Google Login', e);
+          })
+          .then(() => this.spinnerService.hideSpinner(spinnerId));
       } catch (e) {
         res('unknown_error');
         console.warn('Google Login', e);

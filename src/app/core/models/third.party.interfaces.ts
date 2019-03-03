@@ -10,5 +10,23 @@ export interface FacebookLoginResponse {
 }
 
 export interface GoogleLoginResponse {
-  status: string;
+  getAuthResponse: () => {
+    access_token: string;
+    id_token: string;
+    scope: string;
+    expires_in: number;
+    expires_at: number;
+  };
+  getBasicProfile: () => {
+    getId(): string;
+    getEmail(): string;
+    getName(): string;
+    getFamilyName(): string;
+    getGivenName(): string;
+    getImageUrl(): string;
+  };
+  getId(): string;
+  isSignedIn(): boolean;
+  hasGrantedScopes(): boolean;
+  getGrantedScopes(): string;
 }

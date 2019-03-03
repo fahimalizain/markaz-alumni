@@ -13,6 +13,8 @@ import { SpinnerService } from 'services/spinner.service';
 import DialogService from 'services/dialog.service';
 import GoogleService from 'services/google.service';
 import FacebookService from 'services/facebook.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RequestInterceptor } from 'services/request.interceptor';
 
 @NgModule({
   declarations: [HeaderComponent, FooterComponent, ComingSoonComponent, SpinnerComponent],
@@ -28,7 +30,10 @@ export class CoreModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: CoreModule,
-      providers: [AuthService, SpinnerService, DialogService, GoogleService, FacebookService]
+      providers: [
+        AuthService, SpinnerService, DialogService, GoogleService, FacebookService,
+        { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }
+      ],
     };
   }
 
