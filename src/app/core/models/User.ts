@@ -3,22 +3,26 @@ export default class User {
     firstName: string;
     lastName: string;
     oAuthProvider?: 'google' | 'facebook';
+    profilePicUrl?: string;
 
-    status: 'complete' | {
-        payment: 'pending' | 'complete',
-        details: 'not_filled' | 'filled' | 'verified'
-    };
+    /**
+     * 1 - Just registered
+     * 2 - Identified
+     * 3 - Filled in details
+     * 4 - Payment Done
+     */
+    state: number;
 
     public static getUser(obj): User {
         return {
             firstName: obj.firstName,
             lastName: obj.lastName,
-            status: obj.status,
+            state: obj.state || 1,
             email: obj.email
         };
     }
 
     public static isUser(obj): obj is User {
-        return obj && typeof obj === 'object' && ['firstName', 'lastName', 'email', 'status'].every((p) => p in obj);
+        return obj && typeof obj === 'object' && ['firstName', 'lastName', 'email', 'state'].every((p) => p in obj);
     }
 }

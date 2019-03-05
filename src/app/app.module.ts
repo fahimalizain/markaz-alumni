@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginModule } from './modules/login/login.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
     CoreModule.forRoot(),
     BrowserAnimationsModule, // includes BrowserModule exported
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    LoginModule
   ],
   exports: [],
   providers: [],

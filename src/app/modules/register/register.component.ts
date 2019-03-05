@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from 'services/auth.service';
+import { RegistrationService } from 'services/registration.service';
+import { GoogleService } from 'services/google.service';
+import { FacebookService } from 'services/facebook.service';
+import User from 'models/User';
 
 @Component({
   selector: 'app-register',
@@ -8,23 +13,35 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
-  accountForm: FormGroup;
-  detailsForm: FormGroup;
+  searchForm: FormGroup;
 
-  constructor(private _fb: FormBuilder) { }
+  constructor(
+    private authService: AuthService,
+    private registrationService: RegistrationService,
+    private _fb: FormBuilder) { }
 
   ngOnInit() {
-    this.accountForm = this._fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-
-    this.detailsForm = this._fb.group({
-      passOutYear: ['', Validators.required],
-      passOutClass: ['', Validators.required],
+    this.searchForm = this._fb.group({
       dateOfBirth: ['10th', Validators.required],
-      fullName: ['', Validators.required]
+      name: ['', Validators.required]
     });
   }
 
+  searchRecords() {
+    const searchTerm = this.searchForm.value as { name: string, dateOfBirth: Date };
+    if (!searchTerm.name || !searchTerm.dateOfBirth) { return; }
+    const dobFormatted = (() => {
+      const d = searchTerm.dateOfBirth, year = d.getFullYear();
+      let month = '' + (d.getMonth() + 1), day = '' + d.getDate();
+
+      if (month.length < 2) { month = '0' + month; }
+      if (day.length < 2) { day = '0' + day; }
+
+      return [year, month, day].join('-');
+    })();
+    this.registrationService.searchSchoolRecords(
+      searchTerm.name,
+      dobFormatted
+    );
+  }
 }

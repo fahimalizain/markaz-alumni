@@ -1,74 +1,37 @@
-<div class="d-flex flex-column justify-content-center mt-5">
-  <span class="h4 text-center mt-5 mb-1">Registration</span>
+<div class="d-flex flex-column justify-content-center">
+  <span class="h4 text-center mb-1">Registration</span>
   <span class="text-muted text-center mb-3">Please complete the following multi-step process</span>
-  <mat-vertical-stepper class="shadow" labelPosition="bottom" linear="true">
-    <mat-step [stepControl]="accountForm">
-      <form class="row p-md-3" [formGroup]="accountForm">
-        <ng-template matStepLabel>Let's get you an Account</ng-template>
-        <div class="col-md-6 d-flex flex-column px-lg-5">
-          <span class="text-muted text-center mb-3">Please provide the credentials you would like to use</span>
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" placeholder="Email" formControlName="email" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" placeholder="Min 6 Letters" formControlName="password" />
-          </mat-form-field>
-          <button type="submit" class="btn" mat-raised-button color="accent">Register</button>
-        </div>
-        <div class="col-md-6 mt-4 mt-md-0 d-flex flex-column">
-          <span class="text-muted text-center mb-3">Or proceed with any of the following providers</span>
-          <!-- google, fb -->
-          <span class="d-flex flex-column flex-sm-row justify-content-center align-items-center">
-            <button type="button" mat-raised-button class="thridy-party-login-btn">
-              <img class="icon" src="assets/third-party-logos/google-favicon.svg">
-              Google
-            </button>
-            <button type="button" mat-raised-button class="thridy-party-login-btn">
-              <img class="icon" src="assets/third-party-logos/facebook-favicon.svg">
-              Facebook
-            </button>
-          </span>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="detailsForm">
-      <form class="p-md-3" [formGroup]="detailsForm">
-        <ng-template matStepLabel>Let's find you</ng-template>
+  <mat-vertical-stepper class="shadow" labelPosition="bottom">
+    <!-- linear="true" -->
+    <mat-step [stepControl]="searchForm">
+      <form class="p-md-3" [formGroup]="searchForm" (ngSubmit)="searchRecords()">
+        <ng-template matStepLabel>Tell us who you are</ng-template>
         <div class="row">
-          <!-- Pass out year -->
+          <!-- Name -->
           <mat-form-field class="col-md-6" appearance="outline">
-            <mat-label>Pass out Year</mat-label>
-            <input matInput type="number" placeholder="Pass Out Year" value="2015" formControlName="passOutYear" />
+            <mat-label>Name</mat-label>
+            <input matInput type="search" placeholder="Name in school records" formControlName="name" />
           </mat-form-field>
 
-          <!-- Pass out class -->
-          <mat-form-field class="col-md-6" appearance="outline">
-            <mat-label>Pass out Class</mat-label>
-            <input matInput type="number" placeholder="Last class you studied in" value="12" formControlName="passOutClass" />
-          </mat-form-field>
-        </div>
-        <div class="row">
           <!-- DOB -->
           <mat-form-field class="col-md-6" appearance="outline">
             <mat-label>Date of Birth</mat-label>
-            <input matInput [matDatepicker]="dobDatePicker" placeholder="DOB in school records" formControlName="dateOfBirth" />
+            <input matInput [matDatepicker]="dobDatePicker" placeholder="DOB in school records"
+              formControlName="dateOfBirth" />
             <mat-datepicker-toggle matSuffix [for]="dobDatePicker">
               <mat-icon matDatepickerToggleIcon>event</mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #dobDatePicker></mat-datepicker>
           </mat-form-field>
-
-          <!-- Name -->
-          <mat-form-field class="col-md-6" appearance="outline">
-            <mat-label>Full Name</mat-label>
-            <input matInput type="search" placeholder="Name in school records" formControlName="fullName" />
-          </mat-form-field>
         </div>
         <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-block max-width-2" mat-raised-button color="accent">Search</button>
+          <button type="submit" [disabled]="searchForm.pristine || searchForm.invalid" class="btn btn-block max-width-2" mat-raised-button color="accent">Search</button>
         </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <form>
+        <ng-template matStepLabel>Confirm your details</ng-template>
       </form>
     </mat-step>
     <mat-step>

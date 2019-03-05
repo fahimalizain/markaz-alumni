@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import User from 'models/User';
 import { SpinnerService } from './spinner.service';
-import DummyDB from '../dummy.db';
 import { HttpClient } from '@angular/common/http';
-import { MBResponse, MBLoginResponse } from 'models/MBResponse';
+import { MBResponse, MBResponseLogin } from 'models/MBResponse';
+import { MatDialog } from '@angular/material';
+import { LoginComponent } from 'src/app/modules/login/login.component';
 
 export type loginResponse = User | 'user_not_found' | 'wrong_credentials' | 'unknown_error';
+const localStorageUserKey = 'user';
+type localStorageUser = User & { auth_token: string };
 
 @Injectable({
   providedIn: 'root'
@@ -16,31 +19,17 @@ export class AuthService {
   currentToken: string;
   currentUser: User = null;
 
-  dummyDB = new DummyDB();
-
   constructor(
     private spinnerService: SpinnerService,
-    private http: HttpClient) { }
-
-  public login(email: string, password: string): Promise<loginResponse> {
-    this.logout();
-    const spinnerId = 'auth_login';
-    this.spinnerService.showSpinner(spinnerId);
-    return this.dummyDB.login(email, password)
-    .then((r) => {
-      this.spinnerService.hideSpinner(spinnerId);
-      if (User.isUser(r)) {
-        this.setUser(r, '');
-      }
-      return r;
-    });
+    private http: HttpClient) {
+    this.loadUser();
   }
 
   /**
    * Fetches the User data we have from the backend
    * @param userId id
    */
-  public oAuthLogin(provider: 'google' | 'facebook', provider_token: string): Promise<loginResponse> {
+  public oAuthLogin(provider: 'google' | 'facebook', user: User, provider_token: string): Promise<MBResponseLogin> {
     this.logout();
     return this.http.post(
       '/v1/auth/login',
@@ -49,31 +38,51 @@ export class AuthService {
         provider_token
       }
     )
-    .toPromise()
-    .then((data: MBLoginResponse) => {
-      if (data.status === 'MB2_0000') {
-        // success
-        // set auth token
-      }
-      return 'unknown_error' as loginResponse;
-    }, () => 'unknown_error' as loginResponse);
+      .toPromise()
+      .then((response: MBResponseLogin) => {
+        if (response.success) {
+          // set auth token
+          user.state = response.data.state;
+          this.setUser(user, response.data.auth_token);
+          response._user = user;
+        }
+        return response;
+      }, (e) => {
+        return {
+          success: false,
+          exc: e
+        } as MBResponseLogin;
+      });
   }
 
-  /**
-   * Used to check if email is valid to be used for a NEW account
-   * @param email email to check
-   */
-  public checkEmailValidity(email: string) {
-    return this.dummyDB.emailValid(email);
+  public logout() {
+    this.clearUser();
+  }
+
+  public loadUser() {
+    let data: string | localStorageUser | null = localStorage.getItem(localStorageUserKey);
+    try {
+      if (data) {
+        data = JSON.parse(data) as localStorageUser;
+        if (data.auth_token) {
+          this.setUser(data, data.auth_token);
+        }
+      }
+    } catch { }
   }
 
   public setUser(user: User, auth_token: string) {
+    const lsUser: localStorageUser = {
+      ...user,
+      auth_token
+    };
+    localStorage.setItem(localStorageUserKey, JSON.stringify(lsUser));
     this.currentToken = auth_token;
     this.currentStatus = 'logged_in';
     this.currentUser = user;
   }
 
-  public logout() {
+  public clearUser() {
     this.currentToken = null;
     this.currentStatus = 'guest';
     this.currentUser = null;

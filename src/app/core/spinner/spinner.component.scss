@@ -2,7 +2,7 @@
 
 .fader {
     @extend .d-flex, .justify-content-center, .align-items-center, .position-fixed;
-    z-index: 1000;
+    z-index: 2000;
     top: 0;
     height: 100vh;
     width: 100vw;

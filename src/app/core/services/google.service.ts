@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { AuthService, loginResponse } from './auth.service';
 import { SpinnerService } from './spinner.service';
 import { GoogleLoginResponse } from 'models/third.party.interfaces';
+import { MBResponseLogin } from 'models/MBResponse';
 
 @Injectable({
   providedIn: 'root'
 })
-export default class GoogleService {
+export class GoogleService {
 
   gAuth = null;
 
@@ -30,23 +31,37 @@ export default class GoogleService {
     });
   }
 
-  public login(): Promise<loginResponse> {
+  public login(): Promise<MBResponseLogin> {
     const spinnerId = 'google_signin';
     this.spinnerService.showSpinner(spinnerId);
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       try {
         this.gAuth.signIn({ scope: 'profile email' })
           .then((gResponse: GoogleLoginResponse) => {
             // google sign in done, forward to backend
-            return this.authService.oAuthLogin('google', gResponse.getAuthResponse().id_token);
+            return this.authService.oAuthLogin(
+              'google',
+              {
+                firstName: gResponse.getBasicProfile().getGivenName(),
+                lastName: gResponse.getBasicProfile().getFamilyName(),
+                email: gResponse.getBasicProfile().getEmail(),
+                state: 0
+              },
+              gResponse.getAuthResponse().id_token);
+          })
+          .then((r: MBResponseLogin) => {
+            this.spinnerService.hideSpinner(spinnerId);
+            resolve(r);
           })
           .catch((e) => {
-            res('unknown_error');
+            resolve({
+              success: false,
+              exc: e
+            } as MBResponseLogin);
             console.warn('Google Login', e);
-          })
-          .then(() => this.spinnerService.hideSpinner(spinnerId));
+          });
       } catch (e) {
-        res('unknown_error');
+        resolve({success: false, exc: e} as Partial<MBResponseLogin> as any);
         console.warn('Google Login', e);
       }
     });

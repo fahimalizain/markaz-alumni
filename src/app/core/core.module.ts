@@ -9,12 +9,12 @@ import { SharedModule } from '../shared/shared.module';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { MatProgressBarModule } from '@angular/material';
-import { SpinnerService } from 'services/spinner.service';
-import DialogService from 'services/dialog.service';
-import GoogleService from 'services/google.service';
-import FacebookService from 'services/facebook.service';
+import { SpinnerService } from './services/spinner.service';
+import { DialogService } from './services/dialog.service';
+import { GoogleService } from './services/google.service';
+import { FacebookService } from './services/facebook.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { RequestInterceptor } from 'services/request.interceptor';
+import { RequestInterceptor } from './services/request.interceptor';
 
 @NgModule({
   declarations: [HeaderComponent, FooterComponent, ComingSoonComponent, SpinnerComponent],
@@ -31,7 +31,7 @@ export class CoreModule {
     return {
       ngModule: CoreModule,
       providers: [
-        AuthService, SpinnerService, DialogService, GoogleService, FacebookService,
+        DialogService, GoogleService, FacebookService, AuthService, SpinnerService,
         { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }
       ],
     };

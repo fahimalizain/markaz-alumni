@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'services/auth.service';
-import GoogleService from 'services/google.service';
-import FacebookService from 'services/facebook.service';
+import { GoogleService } from 'services/google.service';
+import { FacebookService } from 'services/facebook.service';
 
 @Component({
   selector: 'app-home',

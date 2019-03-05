@@ -2,11 +2,13 @@ import { AuthService, loginResponse } from './auth.service';
 import { Injectable } from '@angular/core';
 import { FacebookLoginResponse } from 'models/third.party.interfaces';
 import { SpinnerService } from './spinner.service';
+import User from 'models/User';
+import { MBResponseLogin } from 'models/MBResponse';
 
 @Injectable({
   providedIn: 'root'
 })
-export default class FacebookService {
+export class FacebookService {
   constructor(private authService: AuthService, private spinnerService: SpinnerService) {
     this.init();
   }
@@ -21,7 +23,7 @@ export default class FacebookService {
     });
   }
 
-  public login(): Promise<loginResponse> {
+  public login(): Promise<MBResponseLogin> {
     const spinnerKey = 'fb_login';
     this.spinnerService.showSpinner(spinnerKey);
     return new Promise((resolve, reject) => {
@@ -30,21 +32,28 @@ export default class FacebookService {
         wnd.FB.login((r: FacebookLoginResponse) => {
           if (r.status !== 'connected') {
             // fetch data from our backend, check to see if something exists
-            resolve('unknown_error');
-            console.error('Facebook Login Failed', r);
+            resolve({success: false, exc: 'FB Connection Failed'} as Partial<MBResponseLogin> as any);
             return;
           }
 
-          // proceed to server
-          this.authService.oAuthLogin('facebook', r.authResponse.accessToken)
-            .then((v) => {
-              this.spinnerService.hideSpinner(spinnerKey);
-              resolve(v);
-            })
-            .catch((e) => {
-              this.spinnerService.hideSpinner(spinnerKey);
-              resolve(e || 'unknown_error');
-            });
+          new Promise((res, rej) => {
+            // fetch user details from facebook api
+            wnd.FB.api('/me', { fields: ['name', 'email', 'picture', 'first_name', 'last_name'] }, res);
+          }).then((usr: { email: string, name: string, first_name: string, last_name: string, picture: { data: { url: string } } }) => {
+            return this.authService.oAuthLogin('facebook', {
+              firstName: usr.first_name,
+              lastName: usr.last_name,
+              email: usr.email,
+              profilePicUrl: usr.picture.data.url,
+              oAuthProvider: 'facebook'
+            } as Partial<User> as any as User, r.authResponse.accessToken);
+          }).then((v) => {
+            this.spinnerService.hideSpinner(spinnerKey);
+            resolve(v);
+          }).catch((e) => {
+            this.spinnerService.hideSpinner(spinnerKey);
+            resolve(e || 'unknown_error');
+          });
         },
           {
             scope: 'public_profile email',
@@ -52,9 +61,8 @@ export default class FacebookService {
           }
         );
       } catch (e) {
-        resolve('unknown_error');
+        resolve({success: false, exc: e} as Partial<MBResponseLogin> as any);
         this.spinnerService.hideSpinner(spinnerKey);
-        console.warn('Facebook Login', e);
       }
     });
   }
