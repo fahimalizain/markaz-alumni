@@ -43,7 +43,7 @@ export class AuthService {
   public oAuthLogin(provider: 'google' | 'facebook', provider_token: string): Promise<loginResponse> {
     this.logout();
     return this.http.post(
-      '/auth/login',
+      '/v1/auth/login',
       {
         provider,
         provider_token
