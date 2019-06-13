@@ -55,6 +55,7 @@ export class GoogleService {
           })
           .catch((e) => {
             resolve({
+              status_code: 'MB5_0000',
               success: false,
               exc: e
             } as MBResponseLogin);

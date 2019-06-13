@@ -1,58 +1,76 @@
-import { Injectable } from '@angular/core';
-import User from 'models/User';
-import { SpinnerService } from './spinner.service';
-import { HttpClient } from '@angular/common/http';
-import { MBResponse, MBResponseLogin } from 'models/MBResponse';
-import { MatDialog } from '@angular/material';
-import { LoginComponent } from 'src/app/modules/login/login.component';
+import { Injectable } from "@angular/core";
+import User, { RegistrationState } from "models/User";
+import { SpinnerService } from "./spinner.service";
+import { HttpClient } from "@angular/common/http";
+import { MBResponse, MBResponseLogin, isMBSuccessful } from "models/MBResponse";
+import { MatDialog } from "@angular/material";
+import { LoginComponent } from "src/app/modules/login/login.component";
 
-export type loginResponse = User | 'user_not_found' | 'wrong_credentials' | 'unknown_error';
-const localStorageUserKey = 'user';
+export type loginResponse =
+  | User
+  | "user_not_found"
+  | "wrong_credentials"
+  | "unknown_error";
+const localStorageUserKey = "user";
 type localStorageUser = User & { auth_token: string };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class AuthService {
-
-  currentStatus: 'logged_in' | 'guest' = 'guest';
+  currentStatus: "logged_in" | "guest" = "guest";
   currentToken: string;
   currentUser: User = null;
 
   constructor(
     private spinnerService: SpinnerService,
-    private http: HttpClient) {
+    private http: HttpClient
+  ) {
     this.loadUser();
+    // @ts-ignore
+    window.logout = () => {
+      this.logout(); // temp quick way to logout
+    };
   }
 
   /**
    * Fetches the User data we have from the backend
    * @param userId id
    */
-  public oAuthLogin(provider: 'google' | 'facebook', user: User, provider_token: string): Promise<MBResponseLogin> {
+  public oAuthLogin(
+    provider: "google" | "facebook",
+    user: User,
+    provider_token: string
+  ): Promise<MBResponseLogin> {
     this.logout();
-    return this.http.post(
-      '/v1/auth/login',
-      {
+    return this.http
+      .post("/v1/auth/login", {
         provider,
         provider_token
-      }
-    )
+      })
       .toPromise()
-      .then((response: MBResponseLogin) => {
-        if (response.success) {
-          // set auth token
-          user.state = response.data.state;
-          this.setUser(user, response.data.auth_token);
-          response._user = user;
+      .then(
+        (response: MBResponseLogin) => {
+          response.success = isMBSuccessful(response.status_code);
+          if (response.success) {
+            // set auth token
+            user.state = response.data.state;
+            this.setUser(user, response.data.auth_token);
+            response._user = user;
+          }
+          return response;
+        },
+        e => {
+          return {
+            success: false,
+            exc: e
+          } as MBResponseLogin;
         }
-        return response;
-      }, (e) => {
-        return {
-          success: false,
-          exc: e
-        } as MBResponseLogin;
-      });
+      );
+  }
+
+  public isLoggedIn() {
+    return !!this.currentUser && !!this.currentToken;
   }
 
   public logout() {
@@ -60,7 +78,9 @@ export class AuthService {
   }
 
   public loadUser() {
-    let data: string | localStorageUser | null = localStorage.getItem(localStorageUserKey);
+    let data: string | localStorageUser | null = localStorage.getItem(
+      localStorageUserKey
+    );
     try {
       if (data) {
         data = JSON.parse(data) as localStorageUser;
@@ -68,31 +88,55 @@ export class AuthService {
           this.setUser(data, data.auth_token);
         }
       }
-    } catch { }
+    } catch {}
   }
 
   public setUser(user: User, auth_token: string) {
-    const lsUser: localStorageUser = {
-      ...user,
-      auth_token
-    };
-    localStorage.setItem(localStorageUserKey, JSON.stringify(lsUser));
     this.currentToken = auth_token;
-    this.currentStatus = 'logged_in';
+    this.currentStatus = "logged_in";
     this.currentUser = user;
+    this.updateLocalStorage();
+  }
+
+  public setUserRegState(state: RegistrationState) {
+    if (!this.currentUser) {
+      return;
+    }
+    this.currentUser.state = state;
+    this.updateLocalStorage();
+  }
+
+  public updateLocalStorage() {
+    if (this.currentUser) {
+      const lsUser: localStorageUser = {
+        ...this.currentUser,
+        auth_token: this.currentToken
+      };
+      localStorage.setItem(localStorageUserKey, JSON.stringify(lsUser));
+    } else {
+      localStorage.setItem(localStorageUserKey, null);
+    }
   }
 
   public clearUser() {
     this.currentToken = null;
-    this.currentStatus = 'guest';
+    this.currentStatus = "guest";
     this.currentUser = null;
+    this.updateLocalStorage();
   }
 
   public getToken() {
-    if (this.currentStatus === 'logged_in') {
+    if (this.currentStatus === "logged_in") {
       return this.currentToken;
     } else {
       return null;
     }
+  }
+
+  public getCurrentUserName() {
+    if (this.isLoggedIn()) {
+      return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+    }
+    return "";
   }
 }

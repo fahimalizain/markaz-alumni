@@ -1,23 +1,74 @@
 <div class="d-flex flex-column justify-content-center">
   <span class="h4 text-center mb-1">Registration</span>
-  <span class="text-muted text-center mb-3">Please complete the following multi-step process</span>
-  <mat-vertical-stepper class="shadow" labelPosition="bottom">
-    <!-- linear="true" -->
-    <mat-step [stepControl]="searchForm">
-      <form class="p-md-3" [formGroup]="searchForm" (ngSubmit)="searchRecords()">
+  <span class="text-muted text-center mb-3"
+    >Please complete the following multi-step process</span
+  >
+  <mat-vertical-stepper
+    #stepper
+    class="shadow"
+    labelPosition="bottom"
+    [linear]="true"
+  >
+    <mat-step [completed]="isOAuthLoggedIn()" [editable]="false">
+      <form>
+        <ng-template matStepLabel>Confirm your details</ng-template>
+        <!-- google, fb -->
+        <span class="row">
+          <button
+            type="button"
+            mat-raised-button
+            class="thridy-party-login-btn col-md-6 mb-2"
+            (click)="googleLogin()"
+          >
+            <img
+              class="icon"
+              src="assets/third-party-logos/google-favicon.svg"
+            />
+            Continue with Google
+          </button>
+          <button
+            type="button"
+            mat-raised-button
+            class="thridy-party-login-btn col-md-6 col-sm-6"
+            (click)="facebookLogin()"
+          >
+            <img
+              class="icon"
+              src="assets/third-party-logos/facebook-favicon.svg"
+            />
+            Continue with Facebook
+          </button>
+        </span>
+      </form>
+    </mat-step>
+    <mat-step [completed]="hasFoundStudentDetails()" [editable]="false">
+      <form
+        class="p-md-3"
+        [formGroup]="searchForm"
+        (ngSubmit)="searchRecords()"
+      >
         <ng-template matStepLabel>Tell us who you are</ng-template>
         <div class="row">
           <!-- Name -->
           <mat-form-field class="col-md-6" appearance="outline">
             <mat-label>Name</mat-label>
-            <input matInput type="search" placeholder="Name in school records" formControlName="name" />
+            <input
+              matInput
+              type="search"
+              placeholder="Name in school records"
+              formControlName="name"
+            />
           </mat-form-field>
 
           <!-- DOB -->
           <mat-form-field class="col-md-6" appearance="outline">
             <mat-label>Date of Birth</mat-label>
-            <input matInput [matDatepicker]="dobDatePicker" placeholder="DOB in school records"
-              formControlName="dateOfBirth" />
+            <input
+              matInput
+              [matDatepicker]="dobDatePicker"
+              placeholder="DOB in school records"
+              formControlName="dateOfBirth"
+            />
             <mat-datepicker-toggle matSuffix [for]="dobDatePicker">
               <mat-icon matDatepickerToggleIcon>event</mat-icon>
             </mat-datepicker-toggle>
@@ -25,24 +76,232 @@
           </mat-form-field>
         </div>
         <div class="d-flex justify-content-center">
-          <button type="submit" [disabled]="searchForm.pristine || searchForm.invalid" class="btn btn-block max-width-2" mat-raised-button color="accent">Search</button>
+          <button
+            type="submit"
+            [disabled]="searchForm.pristine || searchForm.invalid"
+            class="btn btn-block max-width-2"
+            mat-raised-button
+            color="accent"
+          >
+            Search
+          </button>
+        </div>
+      </form>
+
+      <form class="mt-5 d-flex flex-column" *ngIf="searchResults">
+        <span class="mb-3">Please select your details</span>
+        <span class="d-flex flex-wrap">
+          <mat-card class="search-result-card" *ngFor="let r of searchResults">
+            <mat-card-title>{{ r.name }}</mat-card-title>
+            <mat-card-subtitle
+              >Admission No: {{ r.admission_no }}</mat-card-subtitle
+            >
+            <button
+              type="button"
+              class="btn btn-block"
+              mat-raised-button
+              color="primary"
+              (click)="confirmRecord(r.admission_no)"
+            >
+              Confirm
+            </button>
+          </mat-card>
+        </span>
+      </form>
+    </mat-step>
+    <mat-step [completed]="hasUpdatedDetails()" [editable]="false">
+      <ng-template matStepLabel>Fill your details</ng-template>
+      <form [formGroup]="detailsForm">
+        <div class="row">
+          <!-- Name -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name in school records"
+              formControlName="name"
+            />
+          </mat-form-field>
+          <!-- Admission No -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Admission No</mat-label>
+            <input
+              matInput
+              readonly
+              placeholder="Admission no in school records"
+              formControlName="admission_no"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <!-- Gender -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select matInput placeholder="Gender" formControlName="gender">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- Date of Birth -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input
+              matInput
+              readonly
+              placeholder="Date of Birth"
+              formControlName="date_of_birth"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <!-- Father Name -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Father's Name</mat-label>
+            <input
+              matInput
+              placeholder="Name of father"
+              formControlName="father_name"
+            />
+          </mat-form-field>
+          <!-- Mother Name -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Mother's Name</mat-label>
+            <input
+              matInput
+              placeholder="Name of mother"
+              formControlName="mother_name"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <!-- Phone Numer -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Mobile Numer</mat-label>
+            <input
+              matInput
+              placeholder="Mobile"
+              formControlName="phone_number"
+            />
+          </mat-form-field>
+          <!-- Email -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Email ID</mat-label>
+            <input
+              matInput
+              type="email"
+              placeholder="Email"
+              formControlName="email"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <!-- Educational Qualification -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Educational Qualification</mat-label>
+            <input
+              matInput
+              placeholder="Qualification"
+              formControlName="educational_qualification"
+            />
+          </mat-form-field>
+          <!-- Profession -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Profession</mat-label>
+            <input
+              matInput
+              placeholder="Profession"
+              formControlName="profession"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <!-- PIN -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>PIN</mat-label>
+            <input matInput placeholder="PIN" formControlName="pin" />
+          </mat-form-field>
+          <!-- Marital Status -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Marital Status</mat-label>
+            <mat-select
+              matInput
+              placeholder="Gender"
+              formControlName="marital_status"
+            >
+              <mat-option value="married">Married</mat-option>
+              <mat-option value="not married">Not Married</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- Spouse Name -->
+          <mat-form-field
+            class="col-md-6 order-md-12"
+            appearance="outline"
+            *ngIf="detailsForm.get('marital_status').value === 'married'"
+          >
+            <mat-label>Spouse Name</mat-label>
+            <input
+              matInput
+              placeholder="Spouse Name"
+              formControlName="spouse_name"
+            />
+          </mat-form-field>
+          <!-- Address -->
+          <mat-form-field class="col-md-6" appearance="outline">
+            <mat-label>Address</mat-label>
+            <textarea
+              [style.min-height]="'120px'"
+              matInput
+              placeholder="Address"
+              formControlName="address"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div class="d-flex justify-content-center">
+          <button
+            type="submit"
+            class="btn btn-block max-width-2"
+            [disabled]="detailsForm.pristine || detailsForm.invalid"
+            mat-raised-button
+            (click)="updateDetails()"
+            color="accent"
+          >
+            Update
+          </button>
         </div>
       </form>
     </mat-step>
-    <mat-step>
-      <form>
-        <ng-template matStepLabel>Confirm your details</ng-template>
-      </form>
+    <mat-step [completed]="paymentCompleted()" [editable]="false">
+      <ng-template matStepLabel>Payment</ng-template>
+      <ng-container [ngSwitch]="paymentPollStatus">
+        <div *ngSwitchCase="'NONE'" class="d-flex flex-column justify-content-center mb-3">
+          <h5 class="h5 mx-auto">
+            Please pay Rs.1000/- to complete the Registration
+          </h5>
+          <button type="submit" color="accent" (click)="makePayment()" mat-raised-button class="btn btn-block max-width-2 mx-auto">
+            Make Payment
+          </button>
+          <form #paymentForm method="POST" [action]="paymentActionUrl">
+            <input *ngFor="let f of paymentData | keyvalue" type="hidden" [name]="f.key" [value]="f.value"/>
+          </form>
+        </div>
+        <div *ngSwitchCase="'POLLING'" class="text-center">
+          Please wait
+        </div>
+        <div *ngSwitchCase="'TXN_SUCCESS'">
+          SUCCESS
+        </div>
+        <div *ngSwitchCase="'TXN_FAILURE'">
+          Failed
+        </div>
+      </ng-container>
     </mat-step>
-    <mat-step>
-      <form>
-        <ng-template matStepLabel>Payment</ng-template>
-      </form>
-    </mat-step>
-    <mat-step>
-      <form>
-        <ng-template matStepLabel>Verification</ng-template>
-      </form>
+    <mat-step [completed]="paymentCompleted()" [editable]="false" class="completed-step">
+      <ng-template matStepLabel>Completed</ng-template>
+      <div class="mx-auto d-flex justify-content-center align-items-center mb-3">
+        <i class="fa fa-check-circle"></i>
+        <span class="ml-3">Registration Completed</span>
+      </div>
+      <button class="btn btn-block max-width-1 mx-auto" [routerLink]="['/', 'profile']" color="accent" mat-raised-button>Goto Profile</button>
     </mat-step>
   </mat-vertical-stepper>
 </div>

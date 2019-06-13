@@ -116,3 +116,7 @@ nav {
     @extend .d-md-none, .p-0, .mr-1;
     @extend .navbar-toggler, .align-self-center;
 }
+
+.button.keep-connected {
+    min-width: 150px;
+}

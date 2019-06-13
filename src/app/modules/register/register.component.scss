@@ -1,2 +1,14 @@
 @import 'src/styles/common.scss';
 
+mat-card.search-result-card {
+  @extend .m-2;
+  min-width: 260px;
+  mat-card-title {
+    font-size: 1.2em;
+  }
+}
+
+i.fa-check-circle {
+  color: #4CAF50;
+  font-size: 3em;
+}

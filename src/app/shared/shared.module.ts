@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
   MatFormFieldModule, MatCardModule, MatInputModule, MatButtonModule, MatDatepickerModule,
-  MatNativeDateModule, MatIconModule, MatDialogModule
+  MatNativeDateModule, MatIconModule, MatDialogModule, MatSelectModule
 } from '@angular/material';
 
 @NgModule({
@@ -18,6 +18,7 @@ import {
     // Material Common MOdules
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,

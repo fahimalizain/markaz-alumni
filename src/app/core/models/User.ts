@@ -11,7 +11,7 @@ export default class User {
      * 3 - Filled in details
      * 4 - Payment Done
      */
-    state: number;
+    state: RegistrationState;
 
     public static getUser(obj): User {
         return {
@@ -25,4 +25,11 @@ export default class User {
     public static isUser(obj): obj is User {
         return obj && typeof obj === 'object' && ['firstName', 'lastName', 'email', 'state'].every((p) => p in obj);
     }
+}
+
+export enum RegistrationState {
+    JUST_REGISTERED = 1,
+    IDENTIFIED = 2,
+    DETAILS_UPDATED = 3,
+    PAYMENT_COMPLETED = 4
 }
