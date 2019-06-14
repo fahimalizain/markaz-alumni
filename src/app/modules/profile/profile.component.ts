@@ -14,4 +14,8 @@ export class ProfileComponent implements OnInit {
   getTitleName() {
     return this.authService.getCurrentUserName();
   }
+
+  getAdmissionNo() {
+    return 123123;
+  }
 }

@@ -3,10 +3,16 @@
     <mat-card-header>
       <div class="row">
         <img class="col-3 h-100" src="/assets/images/alumni-logo.png" />
-        <div class="col-9">
-          <mat-card-title>
-            {{ getTitleName() }}
+        <div class="col-9 row">
+          <mat-card-title class="col-8">
+            <div class="member-title">Life Member</div>
+            <hr />
+            <div>{{ getTitleName() }}</div>
+            <div>{{ getAdmissionNo() }}</div>
           </mat-card-title>
+          <div class="col-4">
+            DP
+          </div>
         </div>
       </div>
     </mat-card-header>
