@@ -89,7 +89,10 @@
       </form>
 
       <form class="mt-5 d-flex flex-column" *ngIf="searchResults">
-        <span class="mb-3">Please select your details</span>
+        <span *ngIf="searchResults.length > 0; else nosearchresults" class="mb-3">Please select your details</span>
+        <ng-template #nosearchresults>
+          <span class="mb-3 text-center">We found no details matching the criteria, please try again</span>
+        </ng-template>
         <span class="d-flex flex-wrap">
           <mat-card class="search-result-card" *ngFor="let r of searchResults">
             <mat-card-title>{{ r.name }}</mat-card-title>

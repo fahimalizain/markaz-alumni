@@ -57,7 +57,6 @@ export class RegisterComponent implements OnInit {
     private spinnerService: SpinnerService,
     private _fb: FormBuilder
   ) {
-    this.resumeUserState();
   }
 
   ngOnInit() {
@@ -102,6 +101,8 @@ export class RegisterComponent implements OnInit {
       profession: ["", Validators.required],
       spouse_name: [""]
     });
+
+    this.resumeUserState();
 
     if (this.route.snapshot.queryParams.pg_status) {
       console.log("Waiting payment");
