@@ -1,7 +1,4 @@
-import { Component, OnInit, ViewChild, Optional } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from 'services/auth.service';
-import User from 'models/User';
+import { Component, OnInit, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { FacebookService } from 'services/facebook.service';
 import { GoogleService } from 'services/google.service';
@@ -44,8 +41,5 @@ export class LoginComponent implements OnInit {
     if (this.dialogRef) {
       this.dialogRef.close();
     }
-    const r = response._user.state >= 4 ? 'home' : 'register';
-    this.router.navigate(['/', r]);
   }
-
 }

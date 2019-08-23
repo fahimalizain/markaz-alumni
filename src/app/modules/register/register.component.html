@@ -11,13 +11,13 @@
   >
     <mat-step [completed]="isOAuthLoggedIn()" [editable]="false">
       <form>
-        <ng-template matStepLabel>Confirm your details</ng-template>
+        <ng-template matStepLabel>Login</ng-template>
         <!-- google, fb -->
-        <span class="row">
+        <div class="row">
           <button
             type="button"
             mat-raised-button
-            class="thridy-party-login-btn col-md-6 mb-2"
+            class="thridy-party-login-btn mb-2 col-12 col-md-6"
             (click)="googleLogin()"
           >
             <img
@@ -29,7 +29,7 @@
           <button
             type="button"
             mat-raised-button
-            class="thridy-party-login-btn col-md-6 col-sm-6"
+            class="thridy-party-login-btn col-12 col-md-6"
             (click)="facebookLogin()"
           >
             <img
@@ -38,7 +38,7 @@
             />
             Continue with Facebook
           </button>
-        </span>
+        </div>
       </form>
     </mat-step>
     <mat-step [completed]="hasFoundStudentDetails()" [editable]="false">
@@ -276,6 +276,9 @@
     <mat-step [completed]="paymentCompleted()" [editable]="false">
       <ng-template matStepLabel>Payment</ng-template>
       <ng-container [ngSwitch]="paymentPollStatus">
+        <form #paymentForm method="POST" [action]="paymentActionUrl">
+          <input *ngFor="let f of paymentData | keyvalue" type="hidden" [name]="f.key" [value]="f.value"/>
+        </form>
         <div *ngSwitchCase="'NONE'" class="d-flex flex-column justify-content-center mb-3">
           <h5 class="h5 mx-auto">
             Please pay Rs.1000/- to complete the Registration
@@ -283,9 +286,6 @@
           <button type="submit" color="accent" (click)="makePayment()" mat-raised-button class="btn btn-block max-width-2 mx-auto">
             Make Payment
           </button>
-          <form #paymentForm method="POST" [action]="paymentActionUrl">
-            <input *ngFor="let f of paymentData | keyvalue" type="hidden" [name]="f.key" [value]="f.value"/>
-          </form>
         </div>
         <div *ngSwitchCase="'POLLING'" class="text-center">
           Please wait
@@ -294,7 +294,10 @@
           SUCCESS
         </div>
         <div *ngSwitchCase="'TXN_FAILURE'">
-          Failed
+          <div class="text-center">Payment failed, please retry</div>
+          <button color="accent" (click)="makePayment()" mat-raised-button class="btn btn-block max-width-2 mx-auto">
+            Retry Payment
+          </button>
         </div>
       </ng-container>
     </mat-step>

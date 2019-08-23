@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
-import User, { RegistrationState } from "models/User";
+import User from "models/User";
 import { SpinnerService } from "./spinner.service";
 import { HttpClient } from "@angular/common/http";
 import { MBResponse, MBResponseLogin, isMBSuccessful } from "models/MBResponse";
 import { MatDialog } from "@angular/material";
 import { LoginComponent } from "src/app/modules/login/login.component";
+import { Router } from '@angular/router';
 
 export type loginResponse =
   | User
@@ -24,6 +25,7 @@ export class AuthService {
 
   constructor(
     private spinnerService: SpinnerService,
+    private router: Router,
     private http: HttpClient
   ) {
     this.loadUser();
@@ -96,9 +98,10 @@ export class AuthService {
     this.currentStatus = "logged_in";
     this.currentUser = user;
     this.updateLocalStorage();
+    this.routeToRegistration();
   }
 
-  public setUserRegState(state: RegistrationState) {
+  public setUserRegState(state: number) {
     if (!this.currentUser) {
       return;
     }
@@ -138,5 +141,13 @@ export class AuthService {
       return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
     }
     return "";
+  }
+
+  private routeToRegistration() {
+    if (window.location.pathname.indexOf("/register") >= 0) {
+      return;
+    }
+    const r = this.currentUser.state >= 4 ? 'home' : 'register';
+    this.router.navigate(['/', r]);
   }
 }

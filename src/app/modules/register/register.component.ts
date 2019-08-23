@@ -10,7 +10,7 @@ import { AuthService } from "services/auth.service";
 import { RegistrationService } from "services/registration.service";
 import { GoogleService } from "services/google.service";
 import { FacebookService } from "services/facebook.service";
-import User, { RegistrationState } from "models/User";
+import User from "models/User";
 import { SpinnerService } from "services/spinner.service";
 import { MatStepper } from "@angular/material";
 import {
@@ -27,6 +27,14 @@ enum StepperIndex {
   DETAILS = 2,
   PAYMENT = 3,
   COMPLETED = 4
+}
+
+// uglifyjs breaks the variable naming
+enum RegistrationState {
+  JUST_REGISTERED = 1,
+  IDENTIFIED = 2,
+  DETAILS_UPDATED = 3,
+  PAYMENT_COMPLETED = 4
 }
 
 @Component({
@@ -207,7 +215,6 @@ export class RegisterComponent implements OnInit {
     const spinnerId = "make-payment";
     this.spinnerService.showSpinner(spinnerId);
     const r = await this.paymentService.getPaytmTransactionDataForRegistration();
-    this.spinnerService.hideSpinner(spinnerId);
     if (r.success) {
       // TODO r.data.pg_redirection handling
       this.paymentActionUrl = r.data.pg_data.url;
@@ -217,6 +224,8 @@ export class RegisterComponent implements OnInit {
     } else {
       // TODO
     }
+    // Dont hide, we are going to be redirected
+    this.spinnerService.hideSpinner(spinnerId);
   }
 
   async pollPayment() {
@@ -261,9 +270,11 @@ export class RegisterComponent implements OnInit {
 
   private resumeUserState() {
     if (!this.isOAuthLoggedIn()) {
+      console.log("register-not logged int");
       // goto first
       this.matStepperGoto(StepperIndex.LOGIN);
     } else {
+      console.log("register-already logged in");
       const state = this.authService.currentUser.state || 0;
       if (state >= 4) {
         // registration done, go home ?
