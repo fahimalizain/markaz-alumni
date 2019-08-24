@@ -11,19 +11,19 @@
 
   <!--Buttons-->
   <div class="button-container" [ngClass]="{collapsed: collapsed}">
-    <div class="button">
+    <div class="button" (click)="routeTo(['/'])">
       Home
     </div>
-    <div class="button">
+    <div class="button" (click)="routeTo(['/gallery'])">
       Gallery
     </div>
-    <div class="button">
+    <div class="button" (click)="routeTo(['/feedback'])">
       Feedback
     </div>
-    <div class="button">
+    <div class="button" (click)="routeTo(['/about'])">
       About
     </div>
-    <div class="button gold">
+    <div class="button gold" (click)="routeTo(['/giving-back'])">
       Giving Back
     </div>
     <div class="button keep-connected" (click)="onKeepConnectedClick()">

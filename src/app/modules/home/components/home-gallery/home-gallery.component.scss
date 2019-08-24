@@ -1,0 +1,13 @@
+@import '~bootstrap/scss/bootstrap.scss';
+
+:host {
+  @extend .h-100, .w-100;
+}
+
+.img-container {
+  background: darkgray;
+
+  .slider-image {
+    max-width: 90vw !important;
+  }
+}

@@ -25,11 +25,17 @@ export class HeaderComponent implements OnInit {
   }
 
   onKeepConnectedClick() {
+    this.collapsed = true;
     if (this.authService.isLoggedIn()) {
       this.router.navigate(["/profile"]);
     } else {
       this.showLoginComponent();
     }
+  }
+
+  routeTo(r: string[]) {
+    this.collapsed = true;
+    this.router.navigate(r);
   }
 
   showLoginComponent() {

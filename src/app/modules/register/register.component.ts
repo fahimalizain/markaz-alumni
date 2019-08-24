@@ -49,6 +49,7 @@ export class RegisterComponent implements OnInit {
   detailsForm: FormGroup;
 
   paymentActionUrl: string;
+  pg_redirection = true;
   paymentData: { [x: string]: any };
   pollOrderId: string;
   paymentPollStatus: "PENDING" | "TXN_SUCCESS" | "TXN_FAILURE" | "NONE" = "NONE";
@@ -63,6 +64,7 @@ export class RegisterComponent implements OnInit {
     private route: ActivatedRoute,
     private registrationService: RegistrationService,
     private spinnerService: SpinnerService,
+    private ngZone: NgZone,
     private _fb: FormBuilder
   ) {
   }
@@ -204,9 +206,34 @@ export class RegisterComponent implements OnInit {
     );
     if (r.success) {
       this.authService.setUserRegState(RegistrationState.DETAILS_UPDATED);
-      this.matStepperGoto(StepperIndex.PAYMENT);
+      this.gotoPaymentIfValid();
     } else {
       //
+    }
+    this.spinnerService.hideSpinner(spinnerId);
+  }
+
+  async gotoPaymentIfValid() {
+    await this.loadPaymentData();
+    if (this.pg_redirection) {
+      this.matStepperGoto(StepperIndex.PAYMENT);
+    } else {
+      this.onRegComplete();
+    }
+  }
+
+  async loadPaymentData() {
+    const spinnerId = "make-payment";
+    this.spinnerService.showSpinner(spinnerId);
+    const r = await this.paymentService.getPaytmTransactionDataForRegistration();
+    if (r.success) {
+      this.pg_redirection = r.data.pg_redirection;
+      if (this.pg_redirection) {
+        this.paymentActionUrl = r.data.pg_data.url;
+        this.paymentData = r.data.pg_data.form_fields;
+      }
+    } else {
+      // TODO
     }
     this.spinnerService.hideSpinner(spinnerId);
   }
@@ -214,18 +241,9 @@ export class RegisterComponent implements OnInit {
   async makePayment() {
     const spinnerId = "make-payment";
     this.spinnerService.showSpinner(spinnerId);
-    const r = await this.paymentService.getPaytmTransactionDataForRegistration();
-    if (r.success) {
-      // TODO r.data.pg_redirection handling
-      this.paymentActionUrl = r.data.pg_data.url;
-      this.paymentData = r.data.pg_data.form_fields;
-      await Utils.asyncSleep(100); // time to update the form action attr and <inputs />
-      this.paymentForm.nativeElement.submit();
-    } else {
-      // TODO
-    }
+    this.paymentForm.nativeElement.submit();
     // Dont hide, we are going to be redirected
-    this.spinnerService.hideSpinner(spinnerId);
+    // this.spinnerService.hideSpinner(spinnerId);
   }
 
   async pollPayment() {
@@ -247,9 +265,13 @@ export class RegisterComponent implements OnInit {
     }
     this.spinnerService.hideSpinner(spinnerId);
     if (this.paymentPollStatus === "TXN_SUCCESS") {
-      this.authService.setUserRegState(RegistrationState.PAYMENT_COMPLETED);
-      this.matStepperGoto(StepperIndex.COMPLETED);
+      this.onRegComplete();
     }
+  }
+
+  async onRegComplete() {
+    this.authService.setUserRegState(RegistrationState.PAYMENT_COMPLETED);
+    this.matStepperGoto(StepperIndex.COMPLETED);
   }
 
   isOAuthLoggedIn() {
@@ -290,6 +312,6 @@ export class RegisterComponent implements OnInit {
 
   private matStepperGoto(idx: StepperIndex) {
     console.log("GOTO ", idx);
-    setTimeout(() => (this.matStepper.selectedIndex = idx), 1);
+    setTimeout(() => this.ngZone.run(() => (this.matStepper.selectedIndex = idx)), 1);
   }
 }

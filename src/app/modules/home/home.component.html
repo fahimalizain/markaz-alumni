@@ -1,2 +1,11 @@
-<img class="main-image" src="assets/images/markaz-panorama.png">
-<app-coming-soon></app-coming-soon>
+<img class="main-image mb-2" src="assets/images/markaz-panorama.jpg" />
+<div class="row">
+  <!-- ORMA -->
+  <app-home-item-container [style.max-height]="itemHeightinEM + 'em'" class="col-md-6" title="ORMA '19'" icon="grade">
+    <app-home-gallery [imgs]="orma_pics" [maxHeight]="(itemHeightinEM - 5) + 'em'" ></app-home-gallery>
+  </app-home-item-container>
+
+  <app-home-item-container [style.max-height]="itemHeightinEM + 'em'" class="col-md-6" title="Office Bearers" icon="grade">
+    <app-core-committee-members></app-core-committee-members>
+  </app-home-item-container>
+</div>

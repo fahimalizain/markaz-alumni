@@ -1,0 +1,10 @@
+<div>
+  <div class="member" *ngFor="let m of members">
+    <img class="image" [src]="m.img" />
+    <div class="details">
+      <div class="name">{{ m.name }}</div>
+      <div class="role">{{ m.role }}</div>
+      <div class="mobile">{{ m.mob }}</div>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule, Router } from "@angular/router";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import {
-  MatFormFieldModule, MatCardModule, MatInputModule, MatButtonModule, MatDatepickerModule,
-  MatNativeDateModule, MatIconModule, MatDialogModule, MatSelectModule
-} from '@angular/material';
+  MatFormFieldModule,
+  MatCardModule,
+  MatInputModule,
+  MatButtonModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatIconModule,
+  MatDialogModule,
+  MatSelectModule
+} from "@angular/material";
+
+import {
+  CarouselModule
+} from "ngx-bootstrap/carousel";
 
 @NgModule({
   declarations: [],
@@ -24,10 +35,8 @@ import {
     MatNativeDateModule,
     MatDialogModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
   ],
-  imports: [
-    CommonModule, RouterModule
-  ]
+  imports: [CommonModule, RouterModule, CarouselModule.forRoot()]
 })
-export class SharedModule { }
+export class SharedModule {}

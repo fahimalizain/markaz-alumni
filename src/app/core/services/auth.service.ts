@@ -98,11 +98,13 @@ export class AuthService {
   }
 
   public setUser(user: User, auth_token: string) {
-    this.currentToken = auth_token;
-    this.currentStatus = "logged_in";
-    this.currentUser = user;
-    this.updateLocalStorage();
-    this.routeToRegistration();
+    this.ngZone.run(() => {
+      this.currentToken = auth_token;
+      this.currentStatus = "logged_in";
+      this.currentUser = user;
+      this.updateLocalStorage();
+      this.routeToRegistration();
+    });
   }
 
   public setUserRegState(state: number) {
@@ -126,10 +128,12 @@ export class AuthService {
   }
 
   public clearUser() {
-    this.currentToken = null;
-    this.currentStatus = "guest";
-    this.currentUser = null;
-    this.updateLocalStorage();
+    this.ngZone.run(() => {
+      this.currentToken = null;
+      this.currentStatus = "guest";
+      this.currentUser = null;
+      this.updateLocalStorage();
+    });
   }
 
   public getToken() {
@@ -151,17 +155,25 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       return;
     }
+
+    const onError = (e) => {
+      console.error("Profile fetch failed", "Clearing login", e);
+      this.clearUser();
+    }
     try {
       this.http
         .get("/v1/alumni/me/profile")
         .toPromise()
         .then((r: MBResponseProfile) => {
-          this.setUser(Object.assign({}, this.currentUser, r.data), this.currentToken);
+          this.setUser(
+            Object.assign({}, this.currentUser, r.data),
+            this.currentToken
+          );
           console.log(this.currentUser);
-        });
-    } catch(e) {
-      console.error("Profile fetch failed", e);
-      this.clearUser();
+        })
+        .catch(onError);
+    } catch (e) {
+      onError(e);
     }
   }
 

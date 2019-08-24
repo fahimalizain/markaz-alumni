@@ -1,0 +1,31 @@
+@import '~bootstrap/scss/bootstrap.scss';
+
+.member {
+  @extend .d-flex, .flex-row;
+  @extend .shadow;
+  @extend .m-2;
+  height: 140px;
+  background: white;
+
+  .image {
+    width: 100px;
+  }
+
+  .details {
+    @extend .d-flex, .flex-column;
+    @extend .p-3;
+
+    .name {
+      font-size: 1.2em;
+    }
+
+    .role {
+      font-size: 1em;
+    }
+
+    .mobile {
+      font-size: 1em;
+      color: gray;
+    }
+  }
+}

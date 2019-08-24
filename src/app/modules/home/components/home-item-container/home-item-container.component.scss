@@ -1,0 +1,27 @@
+@import '~bootstrap/scss/bootstrap.scss';
+
+.header {
+  @extend .p-4;
+  @extend .d-flex, .flex-row, .align-items-center;
+
+  border: 1px solid #0000002e;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.651);
+
+  .title {
+    @extend .ml-4;
+    font-size: 20px;
+  }
+
+  .icon {
+    color: gray;
+    font-size: 30px;
+    height: auto !important;
+  }
+}
+
+.content {
+  @extend .p-2;
+  overflow-y: auto;
+  max-height: calc(100% - 50px);
+}
