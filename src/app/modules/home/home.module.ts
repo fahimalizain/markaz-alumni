@@ -9,13 +9,17 @@ import { HomeItemContainerComponent } from "./components/home-item-container/hom
 import { SharedModule } from "src/app/shared/shared.module";
 import { HomeGalleryComponent } from "./components/home-gallery/home-gallery.component";
 import { CarouselModule } from "ngx-bootstrap/carousel";
+import { NewsAndEventsComponent } from './components/news-and-events/news-and-events.component';
+import { ComingSoonComponent } from './components/coming-soon/coming-soon.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     CoreCommitteeMembersComponent,
     HomeItemContainerComponent,
-    HomeGalleryComponent
+    HomeGalleryComponent,
+    NewsAndEventsComponent,
+    ComingSoonComponent
   ],
   imports: [SharedModule, CommonModule, HomeRoutingModule, CarouselModule]
 })

@@ -1,7 +1,7 @@
 <carousel class="h-100 w-100">
   <slide *ngFor="let i of imgs">
-    <div class="text-center img-container">
-      <img [style.max-height]="maxHeight" class="slider-image img-responsive" [src]="i" />
+    <div class="img-container" [style.min-height]="maxHeight">
+      <img [style.max-height]="maxHeight" [style.height]="maxHeight" class="slider-image img-responsive" [src]="i" />
     </div>
   </slide>
 </carousel>

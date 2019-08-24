@@ -1,4 +1,4 @@
-@import '~bootstrap/scss/bootstrap.scss';
+@import 'src/styles/common.scss';
 
 :host {
   @extend .h-100, .w-100;
@@ -6,6 +6,7 @@
 
 .img-container {
   background: darkgray;
+  @extend .d-flex, .align-items-center, .justify-content-center;
 
   .slider-image {
     max-width: 90vw !important;

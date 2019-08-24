@@ -307,7 +307,7 @@
         <i class="fa fa-check-circle"></i>
         <span class="ml-3">Registration Completed</span>
       </div>
-      <button class="btn btn-block max-width-1 mx-auto" [routerLink]="['/', 'profile']" color="accent" mat-raised-button>Goto Profile</button>
+      <button class="btn btn-block max-width-1 mx-auto" (click)="gotoProfile()" color="accent" mat-raised-button>Goto Profile</button>
     </mat-step>
   </mat-vertical-stepper>
 </div>

@@ -1,0 +1,10 @@
+@import 'src/styles/common.scss';
+
+#comingSoon {
+  width: 50vw;
+  @extend .shadow;
+
+  @include respond-to(sm) {
+    width: 75vw;
+  }
+}

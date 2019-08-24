@@ -60,7 +60,9 @@ export class AuthService {
           if (response.success) {
             // set auth token
             user.state = response.data.state;
+            this.currentToken = response.data.auth_token;
             this.setUser(user, response.data.auth_token);
+            this.loadServerProfile();
             response._user = user;
           }
           return response;
@@ -151,7 +153,7 @@ export class AuthService {
     return "";
   }
 
-  public loadServerProfile() {
+  public async loadServerProfile() {
     if (!this.isLoggedIn()) {
       return;
     }
@@ -161,17 +163,20 @@ export class AuthService {
       this.clearUser();
     }
     try {
-      this.http
-        .get("/v1/alumni/me/profile")
-        .toPromise()
-        .then((r: MBResponseProfile) => {
-          this.setUser(
-            Object.assign({}, this.currentUser, r.data),
-            this.currentToken
-          );
-          console.log(this.currentUser);
-        })
-        .catch(onError);
+      await new Promise(res => {
+        this.http
+          .get("/v1/alumni/me/profile")
+          .toPromise()
+          .then((r: MBResponseProfile) => {
+            this.setUser(
+              Object.assign({}, this.currentUser, r.data),
+              this.currentToken
+            );
+            console.log(this.currentUser);
+          })
+          .catch(onError)
+          .finally(res);
+        });
     } catch (e) {
       onError(e);
     }

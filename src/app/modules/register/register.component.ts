@@ -19,7 +19,7 @@ import {
 } from "models/MBResponse";
 import Utils from "src/app/core/utils";
 import { PaymentService } from "services/payment.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 enum StepperIndex {
   LOGIN = 0,
@@ -65,6 +65,7 @@ export class RegisterComponent implements OnInit {
     private registrationService: RegistrationService,
     private spinnerService: SpinnerService,
     private ngZone: NgZone,
+    private router: Router,
     private _fb: FormBuilder
   ) {
   }
@@ -288,6 +289,14 @@ export class RegisterComponent implements OnInit {
 
   paymentCompleted() {
     return this.isOAuthLoggedIn() && this.authService.currentUser.state >= 4;
+  }
+
+  async gotoProfile() {
+    const spinner_id = "profile-load";
+    this.spinnerService.showSpinner(spinner_id);
+    await this.authService.loadServerProfile();
+    this.router.navigate(["/profile"]);
+    this.spinnerService.hideSpinner(spinner_id);
   }
 
   private resumeUserState() {

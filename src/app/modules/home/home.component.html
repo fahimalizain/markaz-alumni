@@ -1,11 +1,47 @@
 <img class="main-image mb-2" src="assets/images/markaz-panorama.jpg" />
 <div class="row">
   <!-- ORMA -->
-  <app-home-item-container [style.max-height]="itemHeightinEM + 'em'" class="col-md-6" title="ORMA '19'" icon="grade">
-    <app-home-gallery [imgs]="orma_pics" [maxHeight]="(itemHeightinEM - 5) + 'em'" ></app-home-gallery>
+  <app-home-item-container
+    [style.max-height]="itemHeightinEM + 'em'"
+    class="col-md-6"
+    title="ORMA '19'"
+    icon="grade"
+  >
+    <app-home-gallery
+      [imgs]="orma_pics"
+      [maxHeight]="itemHeightinEM - 4.2 + 'em'"
+    ></app-home-gallery>
   </app-home-item-container>
 
-  <app-home-item-container [style.max-height]="itemHeightinEM + 'em'" class="col-md-6" title="Office Bearers" icon="grade">
+  <app-home-item-container
+    [style.max-height]="itemHeightinEM + 'em'"
+    class="col-md-6"
+    title="Office Bearers"
+    icon="grade"
+  >
     <app-core-committee-members></app-core-committee-members>
+  </app-home-item-container>
+
+  <!-- School -->
+  <app-home-item-container
+    [style.max-height]="itemHeightinEM + 'em'"
+    class="col-md-6"
+    title="Memories"
+    icon="grade"
+  >
+    <app-home-gallery
+      [imgs]="school_pics"
+      [maxHeight]="itemHeightinEM - 4.2 + 'em'"
+    ></app-home-gallery>
+  </app-home-item-container>
+
+  <!-- School -->
+  <app-home-item-container
+    [style.max-height]="itemHeightinEM + 'em'"
+    class="col-md-6"
+    title="News & Events"
+    icon="grade"
+  >
+    <app-news-and-events></app-news-and-events>
   </app-home-item-container>
 </div>
