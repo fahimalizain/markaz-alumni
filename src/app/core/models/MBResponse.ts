@@ -1,11 +1,11 @@
-import User from './User';
+import User from "./User";
 
 export function isMBSuccessful(status_code: string) {
-  return status_code && status_code.indexOf && status_code.indexOf('MB2_') >= 0;
+  return status_code && status_code.indexOf && status_code.indexOf("MB2_") >= 0;
 }
 
 export interface MBResponse {
-  status_code: 'MB2_0000' | 'MB5_0000';
+  status_code: "MB2_0000" | "MB5_0000";
   success: boolean;
   exc?: any;
 }
@@ -18,6 +18,16 @@ export interface MBResponseLogin extends MBResponse {
   };
   /** Filled client side */
   _user: User;
+}
+
+export interface MBResponseProfile extends MBResponse {
+  data: {
+    admission_no: number;
+    membership_no: number;
+    name: string;
+    profile_pic: string;
+    state: number;
+  };
 }
 
 export interface MBResponseSchoolRecord extends MBResponse {
@@ -41,7 +51,7 @@ export interface MBResponseSchoolRecord extends MBResponse {
 
 export interface MBResponseSchoolRecordsSearch extends MBResponse {
   data: {
-    school_records: SchoolRecordsResult
+    school_records: SchoolRecordsResult;
   };
 }
 
@@ -70,7 +80,7 @@ export interface MBResponsePayTMTrDataForRegistration extends MBResponse {
 export interface MBResponsePayTMTrStatus extends MBResponse {
   data: {
     status: "TXN_SUCCESS" | "TXN_FAILURE" | "PENDING";
-  }
+  };
 }
 
 export type SchoolRecordsResult = Array<{

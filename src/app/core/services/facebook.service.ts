@@ -16,8 +16,9 @@ export class FacebookService {
     this.init();
   }
 
-  public init() {
+  public async init() {
     const wnd = window as any;
+    await this.awaitFBScript();
     wnd.FB.init({
       appId: "244899966288884",
       autoLogAppEvents: true,
@@ -99,6 +100,20 @@ export class FacebookService {
         >) as any);
         this.spinnerService.hideSpinner(spinnerKey);
       }
+    });
+  }
+
+  private awaitFBScript() {
+    return new Promise(res => {
+      const check = () => {
+        // @ts-ignore
+        if (!window.FB) {
+          setTimeout(check, 20);
+        } else {
+          res();
+        }
+      };
+      check();
     });
   }
 }

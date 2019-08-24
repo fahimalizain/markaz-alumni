@@ -1,11 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import User from "models/User";
 import { SpinnerService } from "./spinner.service";
 import { HttpClient } from "@angular/common/http";
-import { MBResponse, MBResponseLogin, isMBSuccessful } from "models/MBResponse";
+import {
+  MBResponse,
+  MBResponseLogin,
+  isMBSuccessful,
+  MBResponseProfile
+} from "models/MBResponse";
 import { MatDialog } from "@angular/material";
 import { LoginComponent } from "src/app/modules/login/login.component";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 
 export type loginResponse =
   | User
@@ -15,9 +20,7 @@ export type loginResponse =
 const localStorageUserKey = "user";
 type localStorageUser = User & { auth_token: string };
 
-@Injectable({
-  providedIn: "root"
-})
+@Injectable()
 export class AuthService {
   currentStatus: "logged_in" | "guest" = "guest";
   currentToken: string;
@@ -26,9 +29,9 @@ export class AuthService {
   constructor(
     private spinnerService: SpinnerService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private ngZone: NgZone
   ) {
-    this.loadUser();
     // @ts-ignore
     window.logout = () => {
       this.logout(); // temp quick way to logout
@@ -88,6 +91,7 @@ export class AuthService {
         data = JSON.parse(data) as localStorageUser;
         if (data.auth_token) {
           this.setUser(data, data.auth_token);
+          this.loadServerProfile();
         }
       }
     } catch {}
@@ -143,11 +147,31 @@ export class AuthService {
     return "";
   }
 
+  public loadServerProfile() {
+    if (!this.isLoggedIn()) {
+      return;
+    }
+    try {
+      this.http
+        .get("/v1/alumni/me/profile")
+        .toPromise()
+        .then((r: MBResponseProfile) => {
+          this.setUser(Object.assign({}, this.currentUser, r.data), this.currentToken);
+          console.log(this.currentUser);
+        });
+    } catch(e) {
+      console.error("Profile fetch failed", e);
+      this.clearUser();
+    }
+  }
+
   private routeToRegistration() {
     if (window.location.pathname.indexOf("/register") >= 0) {
       return;
     }
-    const r = this.currentUser.state >= 4 ? 'home' : 'register';
-    this.router.navigate(['/', r]);
+    this.ngZone.run(() => {
+      const r = this.currentUser.state >= 4 ? "home" : "register";
+      this.router.navigate(["/", r]);
+    });
   }
 }

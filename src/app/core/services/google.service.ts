@@ -17,8 +17,9 @@ export class GoogleService {
     this.init();
   }
 
-  public init() {
+  public async init() {
     const wnd = window as any;
+    await this.awaitGAPIScript();
     wnd.gapi.load("auth2", () => {
       // Retrieve the singleton for the GoogleAuth library and set up the client.
       wnd.gapi.auth2
@@ -76,6 +77,20 @@ export class GoogleService {
         >) as any);
         console.warn("Google Login", e);
       }
+    });
+  }
+
+  private awaitGAPIScript() {
+    return new Promise(res => {
+      const check = () => {
+        // @ts-ignore
+        if (!window.gapi) {
+          setTimeout(check, 20);
+        } else {
+          res();
+        }
+      };
+      check();
     });
   }
 }
