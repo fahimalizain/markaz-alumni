@@ -182,8 +182,9 @@ export class AuthService {
       return;
     }
     this.ngZone.run(() => {
-      const r = this.currentUser.state >= 4 ? "home" : "register";
-      this.router.navigate(["/", r]);
+      if (this.currentUser.state < 4) {
+        this.router.navigate(["/register"]);
+      }
     });
   }
 }

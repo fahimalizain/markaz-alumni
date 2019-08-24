@@ -395,6 +395,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+angular-particle
+MIT
+
 @angular/material/form-field
 
 @angular/material/stepper

@@ -1,4 +1,108 @@
-.member-title {
-  text-transform: uppercase;
-  font-weight: 500;
+@import "src/styles/common.scss";
+
+.title-orma {
+
+  background: rgb(255, 253, 219);
+  padding: $sp-5;
+
+  @include respond-to(sm) {
+    padding: $sp-3;
+  }
+
+  particles {
+    position: absolute;
+    margin: (-1 * $sp-5) 0 0 (-1 * $sp-5);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    @include respond-to(sm) {
+      margin: (-1 * $sp-3) 0 0 (-1 * $sp-3);
+    }
+  }
+
+  // The image
+  .orma-img {
+    max-width: 200px;
+    z-index: 10;
+    @include respond-to(sm) {
+      max-width: 100px;
+    }
+  }
+
+  .member-title-container {
+    margin-left: 2em;
+    width: 70%;
+    z-index: 10;
+    margin-top: 1.5em;
+    @include respond-to(sm) {
+      margin-left: 1em;
+      margin-top: 1em;
+    }
+
+    hr {
+      border: none;
+      height: 3px;
+      /* Set the hr color */
+      color: #333; /* old IE */
+      background-color: #333; /* Modern Browsers */
+    }
+  }
+
+  // LIFE MEMBER
+  .member-title {
+    font-size: 2em;
+    text-transform: uppercase;
+    font-weight: 500;
+
+    @include respond-to(sm) {
+      font-size: 1.5em;
+    }
+  }
+
+  .member-number {
+    text-transform: uppercase;
+    @extend .text-muted;
+  }
+}
+
+.member-detail {
+  @extend .shadow, .p-4;
+  background: white;
+
+  @include respond-to(sm) {
+    padding: $sp-2 !important;
+  }
+
+  img {
+    @extend .shadow;
+    width: 10em;
+    max-width: 30vw;
+  }
+
+  .member-detail-subcontainer {
+    padding: $sp-4;
+    @include respond-to(sm) {
+      padding: $sp-2 !important;
+    }
+  }
+
+  .member-name {
+    font-size: 1.5em;
+    @include respond-to(sm) {
+      font-size: 1.2em;
+    }
+    @include respond-to(xs) {
+      font-size: 1em;
+    }
+  }
+  .member-admission {
+    @extend .text-muted;
+    @include respond-to(sm) {
+      font-size: 0.9em;
+    }
+    @include respond-to(xs) {
+      font-size: 0.8em;
+    }
+  }
 }
